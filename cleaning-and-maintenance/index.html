@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cleaning and Maintenance</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #111; }
+
+#loading {
+  position: fixed; inset: 0; background: #fff; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  transition: opacity 0.5s ease;
+}
+#loading-title { font-size: 22px; font-weight: 300; color: #333; letter-spacing: 0.05em; margin-bottom: 10px; }
+#loading-sub   { font-size: 12px; color: #bbb; letter-spacing: 0.03em; }
+#loading-bar-wrap { margin-top: 18px; width: 180px; height: 1px; background: #ddd; }
+#loading-bar   { height: 100%; width: 0%; background: #333; transition: width 0.2s ease; }
+
+#proto-outer {
+  width: 100vw; height: 100vh; overflow: hidden;
+  display: flex; align-items: flex-start; justify-content: center;
+}
+#proto-scaler  { width: 1501px; transform-origin: top left; }
+#proto-scroll  {
+  overflow-y: scroll; overflow-x: hidden;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+#proto-scroll::-webkit-scrollbar { display: none; }
+
+/* Sticky header: always shows the top fh px of the current screen */
+#sticky-hdr {
+  position: sticky; top: 0;
+  overflow: hidden; z-index: 50; display: none;
+}
+#sticky-hdr-img {
+  position: absolute; top: 0; left: 0;
+  width: 1501px; display: block;
+  image-rendering: -webkit-optimize-contrast;
+}
+#sticky-hdr-hots { position: absolute; inset: 0; pointer-events: none; }
+
+/* Screen body: content below the fixed header */
+#scr-body { position: relative; overflow: hidden; }
+#scr-img  {
+  display: block;
+  width: 1501px;        /* logical CSS width — browser uses full pixel density */
+  image-rendering: -webkit-optimize-contrast;
+}
+#scr-hots {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; pointer-events: none;
+}
+
+.hs {
+  position: absolute; pointer-events: all;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  /* Debug: outline: 1px solid rgba(255,0,0,0.3); background: rgba(0,100,255,0.04); */
+}
+
+#fade {
+  position: fixed; inset: 0; background: #fff;
+  z-index: 200; opacity: 0; pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div style="text-align:center">
+    <div id="loading-title">Cleaning and Maintenance</div>
+    <div id="loading-sub">Loading&hellip;</div>
+    <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
+  </div>
+</div>
+
+<div id="fade"></div>
+
+<div id="proto-outer">
+  <div id="proto-scaler">
+    <div id="proto-scroll">
+      <div id="sticky-hdr">
+        <img id="sticky-hdr-img" src="" alt="">
+        <div id="sticky-hdr-hots"></div>
+      </div>
+      <div id="scr-body">
+        <img id="scr-img" src="" alt="">
+        <div id="scr-hots"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCREENS  = {"267361331":{"id":267361331,"name":"Intro V1-01","img":"images/hires/intro-01.png","w":1501,"h":834,"fh":150,"bg":"ffffff"},"267352022":{"id":267352022,"name":"Home V1-01","img":"images/hires/home-01.png","w":1501,"h":2755,"fh":149,"bg":"ffffff"},"267352023":{"id":267352023,"name":"Home V1-02","img":"images/hires/home-02.png","w":1501,"h":1540,"fh":151,"bg":"ffffff"},"267352024":{"id":267352024,"name":"Home V1-03","img":"images/hires/home-03.png","w":1501,"h":1534,"fh":152,"bg":"ffffff"},"267352025":{"id":267352025,"name":"Home V1-04","img":"images/hires/home-04.png","w":1501,"h":2065,"fh":151,"bg":"ffffff"},"267352026":{"id":267352026,"name":"Home V1-05","img":"images/hires/home-05.png","w":1501,"h":1486,"fh":150,"bg":"ffffff"},"267352027":{"id":267352027,"name":"Home V1-06","img":"images/hires/home-06.png","w":1501,"h":1486,"fh":150,"bg":"ffffff"},"267352028":{"id":267352028,"name":"Home V1-07","img":"images/hires/home-07.png","w":1501,"h":833,"fh":148,"bg":"ffffff"},"267351006":{"id":267351006,"name":"Lounge Chair Pieces V1 Blue Hover","img":"images/hires/lounge-blue-hov.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351007":{"id":267351007,"name":"Lounge Chair Pieces V1 Blue No Hover","img":"images/hires/lounge-blue-nohov.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351008":{"id":267351008,"name":"Lounge Chair Pieces V1 Green Hover","img":"images/hires/lounge-green-hov.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351009":{"id":267351009,"name":"Lounge Chair Pieces V1 Green No Hover","img":"images/hires/lounge-green-nohov.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351010":{"id":267351010,"name":"Lounge Chair Pieces V1 Main","img":"images/hires/lounge-main.png","w":1501,"h":1101,"fh":151,"bg":"ffffff"},"267351011":{"id":267351011,"name":"Lounge Chair Pieces V1 Orange","img":"images/hires/lounge-orange.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351012":{"id":267351012,"name":"Office Chair V3-01","img":"images/screens/015 office-chair-v3-01.png","w":1501,"h":1101,"fh":149,"bg":"ffffff"},"267351013":{"id":267351013,"name":"Office Chair V3-02","img":"images/screens/016 office-chair-v3-02.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351014":{"id":267351014,"name":"Office Chair V3-03","img":"images/screens/017 office-chair-v3-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351015":{"id":267351015,"name":"Office Chair V3-04","img":"images/screens/018 office-chair-v3-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351016":{"id":267351016,"name":"Office Chair V3-05","img":"images/screens/019 office-chair-v3-05.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351017":{"id":267351017,"name":"Office Chair V4-01","img":"images/hires/office-v4-01.png","w":1501,"h":1101,"fh":150,"bg":"ffffff"},"267351018":{"id":267351018,"name":"Office Chair V4-02","img":"images/hires/office-v4-02.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351019":{"id":267351019,"name":"Office Chair V4-03","img":"images/hires/office-v4-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351020":{"id":267351020,"name":"Office Chair V4-04","img":"images/hires/office-v4-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351021":{"id":267351021,"name":"Plastic Chair V1-01","img":"images/screens/024 plastic-chair-v1-01.png","w":1501,"h":1101,"fh":150,"bg":"ffffff"},"267351022":{"id":267351022,"name":"Plastic Chair V1-02","img":"images/screens/025 plastic-chair-v1-02.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351023":{"id":267351023,"name":"Plastic Chair V1-03","img":"images/screens/026 plastic-chair-v1-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351024":{"id":267351024,"name":"Plastic Chair V1-04","img":"images/screens/027 plastic-chair-v1-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351025":{"id":267351025,"name":"Plastic Chair V1-05","img":"images/screens/028 plastic-chair-v1-05.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351026":{"id":267351026,"name":"Plastic Chair V1-06","img":"images/screens/029 plastic-chair-v1-06.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351027":{"id":267351027,"name":"Plastic Chair V2-01","img":"images/hires/plastic-v2-01.png","w":1501,"h":1101,"fh":150,"bg":"ffffff"},"267351028":{"id":267351028,"name":"Plastic Chair V2-02","img":"images/hires/plastic-v2-02.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351029":{"id":267351029,"name":"Plastic Chair V2-03","img":"images/hires/plastic-v2-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351030":{"id":267351030,"name":"Plastic Chair V2-04","img":"images/hires/plastic-v2-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351031":{"id":267351031,"name":"Plastic Chair V2-05","img":"images/hires/plastic-v2-05.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351032":{"id":267351032,"name":"Wire Chair V1-01","img":"images/screens/035 wire-chair-v1-01.png","w":1501,"h":1101,"fh":152,"bg":"ffffff"},"267351033":{"id":267351033,"name":"Wire Chair V1-02","img":"images/screens/036 wire-chair-v1-02.png","w":1501,"h":1101,"fh":150,"bg":"ffffff"},"267351034":{"id":267351034,"name":"Wire Chair V1-03","img":"images/screens/037 wire-chair-v1-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351035":{"id":267351035,"name":"Wire Chair V1-04","img":"images/screens/038 wire-chair-v1-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351036":{"id":267351036,"name":"Wire Chair V2-01","img":"images/hires/wire-v2-01.png","w":1501,"h":1101,"fh":151,"bg":"ffffff"},"267351037":{"id":267351037,"name":"Wire Chair V2-02","img":"images/hires/wire-v2-02.png","w":1501,"h":1101,"fh":150,"bg":"ffffff"},"267351038":{"id":267351038,"name":"Wire Chair V2-03","img":"images/hires/wire-v2-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351039":{"id":267351039,"name":"Wire Chair V2-04","img":"images/hires/wire-v2-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351040":{"id":267351040,"name":"Wood Chair V1-01","img":"images/screens/043 wood-chair-v1-01.png","w":1501,"h":1101,"fh":152,"bg":"ffffff"},"267351041":{"id":267351041,"name":"Wood Chair V1-02","img":"images/screens/044 wood-chair-v1-02.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351042":{"id":267351042,"name":"Wood Chair V1-03","img":"images/screens/045 wood-chair-v1-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351044":{"id":267351044,"name":"Wood Chair V1-04","img":"images/screens/046 wood-chair-v1-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351045":{"id":267351045,"name":"Wood Chair V2-01","img":"images/hires/wood-v2-01.png","w":1501,"h":1101,"fh":151,"bg":"ffffff"},"267351047":{"id":267351047,"name":"Wood Chair V2-03","img":"images/hires/wood-v2-03.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351046":{"id":267351046,"name":"Wood Chair V2-02","img":"images/hires/wood-v2-02.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"},"267351048":{"id":267351048,"name":"Wood Chair V2-04","img":"images/hires/wood-v2-04.png","w":1501,"h":1101,"fh":0,"bg":"ffffff"}};
+const HOTSPOTS = {"267352022":[{"x":112,"y":206,"w":692,"h":617,"target":267351010,"ev":1},{"x":986,"y":209,"w":405,"h":586,"target":267351012,"ev":1},{"x":1029,"y":2116,"w":381,"h":609,"target":267351017,"ev":1},{"x":576,"y":2113,"w":391,"h":613,"target":267351021,"ev":1},{"x":108,"y":2113,"w":359,"h":585,"target":267351027,"ev":1},{"x":614,"y":888,"w":322,"h":557,"target":267351032,"ev":1},{"x":1069,"y":870,"w":319,"h":578,"target":267351033,"ev":1},{"x":611,"y":1483,"w":322,"h":592,"target":267351036,"ev":1},{"x":1065,"y":1475,"w":313,"h":609,"target":267351037,"ev":1},{"x":99,"y":936,"w":389,"h":540,"target":267351040,"ev":1},{"x":109,"y":1545,"w":367,"h":548,"target":267351045,"ev":1},{"x":1237,"y":69,"w":55,"h":56,"target":267352023,"ev":1},{"x":1298,"y":68,"w":61,"h":57,"target":267352024,"ev":1},{"x":1370,"y":70,"w":56,"h":58,"target":267352025,"ev":1},{"x":67,"y":65,"w":221,"h":71,"target":267361331,"ev":1}],"267352023":[{"x":1017,"y":865,"w":366,"h":608,"target":267351021,"ev":1},{"x":1019,"y":213,"w":363,"h":591,"target":267351027,"ev":1},{"x":592,"y":223,"w":347,"h":576,"target":267351032,"ev":1},{"x":595,"y":891,"w":340,"h":556,"target":267351036,"ev":1},{"x":114,"y":285,"w":376,"h":528,"target":267351040,"ev":1},{"x":107,"y":947,"w":362,"h":497,"target":267351045,"ev":1},{"x":69,"y":65,"w":210,"h":70,"target":267352022,"ev":1},{"x":1234,"y":68,"w":59,"h":58,"target":267352022,"ev":1},{"x":1367,"y":68,"w":65,"h":62,"target":267352026,"ev":1}],"267352024":[{"x":991,"y":198,"w":399,"h":614,"target":267351012,"ev":1},{"x":982,"y":851,"w":415,"h":601,"target":267351017,"ev":1},{"x":127,"y":230,"w":332,"h":567,"target":267351032,"ev":1},{"x":136,"y":866,"w":321,"h":603,"target":267351033,"ev":1},{"x":593,"y":213,"w":341,"h":596,"target":267351036,"ev":1},{"x":601,"y":855,"w":321,"h":599,"target":267351037,"ev":1},{"x":65,"y":63,"w":212,"h":71,"target":267352022,"ev":1},{"x":1305,"y":74,"w":50,"h":51,"target":267352022,"ev":1},{"x":1368,"y":71,"w":68,"h":55,"target":267352027,"ev":1}],"267352025":[{"x":110,"y":194,"w":702,"h":617,"target":267351010,"ev":1},{"x":1071,"y":210,"w":334,"h":583,"target":267351032,"ev":1},{"x":593,"y":842,"w":333,"h":583,"target":267351033,"ev":1},{"x":1065,"y":849,"w":350,"h":604,"target":267351036,"ev":1},{"x":600,"y":1461,"w":331,"h":585,"target":267351037,"ev":1},{"x":87,"y":904,"w":417,"h":560,"target":267351040,"ev":1},{"x":102,"y":1531,"w":402,"h":520,"target":267351045,"ev":1},{"x":70,"y":69,"w":215,"h":65,"target":267352022,"ev":1},{"x":1367,"y":68,"w":60,"h":57,"target":267352022,"ev":1},{"x":1236,"y":67,"w":54,"h":60,"target":267352026,"ev":1},{"x":1300,"y":70,"w":59,"h":57,"target":267352027,"ev":1}],"267352026":[{"x":589,"y":222,"w":338,"h":589,"target":267351032,"ev":1},{"x":1043,"y":209,"w":350,"h":599,"target":267351036,"ev":1},{"x":139,"y":294,"w":340,"h":502,"target":267351040,"ev":1},{"x":106,"y":918,"w":386,"h":546,"target":267351045,"ev":1},{"x":73,"y":67,"w":210,"h":66,"target":267352022,"ev":1},{"x":1366,"y":69,"w":62,"h":58,"target":267352023,"ev":1},{"x":1235,"y":69,"w":54,"h":58,"target":267352025,"ev":1},{"x":1300,"y":72,"w":58,"h":52,"target":267352028,"ev":1}],"267352027":[{"x":112,"y":213,"w":349,"h":590,"target":267351032,"ev":1},{"x":108,"y":868,"w":357,"h":589,"target":267351033,"ev":1},{"x":588,"y":217,"w":361,"h":587,"target":267351036,"ev":1},{"x":1067,"y":203,"w":323,"h":607,"target":267351037,"ev":1},{"x":68,"y":62,"w":217,"h":72,"target":267352022,"ev":1},{"x":1367,"y":65,"w":66,"h":63,"target":267352024,"ev":1},{"x":1301,"y":65,"w":55,"h":62,"target":267352025,"ev":1},{"x":1235,"y":68,"w":55,"h":59,"target":267352028,"ev":1}],"267352028":[{"x":112,"y":199,"w":366,"h":605,"target":267351032,"ev":1},{"x":566,"y":207,"w":388,"h":623,"target":267351036,"ev":1},{"x":65,"y":65,"w":215,"h":66,"target":267352022,"ev":1},{"x":1301,"y":69,"w":58,"h":59,"target":267352026,"ev":1},{"x":1235,"y":68,"w":55,"h":57,"target":267352027,"ev":1}],"267361331":[{"x":44,"y":152,"w":1422,"h":680,"target":267352022,"ev":1},{"x":55,"y":48,"w":1395,"h":96,"target":267352022,"ev":1}],"267351010":[{"x":542,"y":715,"w":442,"h":71,"target":267351006,"ev":8},{"x":539,"y":164,"w":446,"h":526,"target":267351007,"ev":8},{"x":995,"y":984,"w":427,"h":72,"target":267351008,"ev":8},{"x":994,"y":163,"w":432,"h":798,"target":267351009,"ev":8},{"x":74,"y":164,"w":448,"h":406,"target":267351011,"ev":8},{"x":67,"y":61,"w":267,"h":76,"target":267352022,"ev":1},{"x":1367,"y":67,"w":67,"h":60,"target":267352022,"ev":1},{"x":1233,"y":69,"w":59,"h":61,"target":267352026,"ev":1},{"x":1300,"y":66,"w":59,"h":63,"target":267352027,"ev":1}],"267351012":[{"x":76,"y":167,"w":440,"h":390,"target":267351013,"ev":8},{"x":533,"y":161,"w":445,"h":285,"target":267351014,"ev":8},{"x":533,"y":457,"w":447,"h":198,"target":267351015,"ev":8},{"x":994,"y":163,"w":436,"h":723,"target":267351016,"ev":8},{"x":67,"y":67,"w":344,"h":67,"target":267352022,"ev":1},{"x":1301,"y":69,"w":52,"h":56,"target":267352022,"ev":1},{"x":1369,"y":72,"w":65,"h":52,"target":267352027,"ev":1}],"267351017":[{"x":67,"y":161,"w":451,"h":383,"target":267351018,"ev":8},{"x":533,"y":163,"w":449,"h":604,"target":267351019,"ev":8},{"x":998,"y":162,"w":424,"h":733,"target":267351020,"ev":8},{"x":69,"y":68,"w":341,"h":69,"target":267352022,"ev":1},{"x":1304,"y":69,"w":51,"h":57,"target":267352022,"ev":1},{"x":1371,"y":67,"w":58,"h":62,"target":267352027,"ev":1}],"267351021":[{"x":53,"y":162,"w":466,"h":396,"target":267351022,"ev":8},{"x":535,"y":162,"w":444,"h":605,"target":267351023,"ev":8},{"x":985,"y":161,"w":432,"h":804,"target":267351024,"ev":8},{"x":987,"y":985,"w":433,"h":42,"target":267351025,"ev":8},{"x":68,"y":64,"w":313,"h":68,"target":267352022,"ev":1},{"x":1237,"y":68,"w":56,"h":57,"target":267352022,"ev":1},{"x":1372,"y":70,"w":56,"h":56,"target":267352026,"ev":1}],"267351027":[{"x":61,"y":162,"w":456,"h":377,"target":267351028,"ev":8},{"x":537,"y":163,"w":443,"h":601,"target":267351029,"ev":8},{"x":990,"y":162,"w":435,"h":798,"target":267351030,"ev":8},{"x":989,"y":984,"w":437,"h":65,"target":267351031,"ev":8},{"x":64,"y":65,"w":317,"h":71,"target":267352022,"ev":1},{"x":1235,"y":71,"w":57,"h":55,"target":267352022,"ev":1},{"x":1370,"y":71,"w":53,"h":53,"target":267352026,"ev":1}],"267351032":[{"x":985,"y":163,"w":452,"h":778,"target":267351032,"ev":8},{"x":65,"y":65,"w":246,"h":66,"target":267352022,"ev":1},{"x":1304,"y":67,"w":52,"h":61,"target":267352026,"ev":1},{"x":1238,"y":68,"w":54,"h":60,"target":267352027,"ev":1}],"267351033":[{"x":532,"y":163,"w":435,"h":603,"target":267351034,"ev":8},{"x":993,"y":163,"w":420,"h":731,"target":267351035,"ev":8},{"x":72,"y":64,"w":240,"h":69,"target":267352022,"ev":1},{"x":1367,"y":72,"w":65,"h":54,"target":267352024,"ev":1},{"x":1306,"y":77,"w":47,"h":45,"target":267352025,"ev":1},{"x":1234,"y":70,"w":58,"h":57,"target":267352028,"ev":1}],"267351036":[{"x":989,"y":166,"w":431,"h":609,"target":267351036,"ev":8},{"x":67,"y":66,"w":246,"h":66,"target":267352022,"ev":1},{"x":1303,"y":70,"w":54,"h":56,"target":267352026,"ev":1},{"x":1234,"y":72,"w":57,"h":53,"target":267352027,"ev":1}],"267351037":[{"x":539,"y":163,"w":432,"h":604,"target":267351038,"ev":8},{"x":992,"y":161,"w":441,"h":755,"target":267351039,"ev":8},{"x":61,"y":62,"w":255,"h":72,"target":267352022,"ev":1},{"x":1368,"y":70,"w":60,"h":65,"target":267352024,"ev":1},{"x":1301,"y":70,"w":55,"h":57,"target":267352025,"ev":1},{"x":1241,"y":72,"w":45,"h":53,"target":267352028,"ev":1}],"267351040":[{"x":536,"y":165,"w":437,"h":596,"target":267351041,"ev":8},{"x":990,"y":166,"w":427,"h":794,"target":267351042,"ev":8},{"x":990,"y":969,"w":427,"h":85,"target":267351044,"ev":8},{"x":64,"y":60,"w":349,"h":76,"target":267352022,"ev":1},{"x":1370,"y":68,"w":66,"h":58,"target":267352023,"ev":1},{"x":1240,"y":69,"w":48,"h":56,"target":267352025,"ev":1},{"x":1302,"y":69,"w":57,"h":55,"target":267352028,"ev":1}],"267351045":[{"x":530,"y":163,"w":443,"h":613,"target":267351046,"ev":8},{"x":993,"y":164,"w":420,"h":793,"target":267351047,"ev":8},{"x":1039,"y":985,"w":370,"h":64,"target":267351048,"ev":8},{"x":68,"y":64,"w":341,"h":73,"target":267352022,"ev":1},{"x":1369,"y":69,"w":60,"h":58,"target":267352023,"ev":1},{"x":1241,"y":70,"w":46,"h":55,"target":267352025,"ev":1}]};
+
+const INTRO = 267361331;
+let baseId  = INTRO;
+
+const scaler     = document.getElementById('proto-scaler');
+const scroll     = document.getElementById('proto-scroll');
+const stickyHdr  = document.getElementById('sticky-hdr');
+const stickyImg  = document.getElementById('sticky-hdr-img');
+const stickyHots = document.getElementById('sticky-hdr-hots');
+const scrBody    = document.getElementById('scr-body');
+const scrImg     = document.getElementById('scr-img');
+const scrHots    = document.getElementById('scr-hots');
+const fade       = document.getElementById('fade');
+
+// ── Scale prototype to viewport ───────────────────────────────────────────
+function reScale() {
+  var scale = window.innerWidth / 1501;
+  scaler.style.transform = 'scale(' + scale + ')';
+  scroll.style.height    = (window.innerHeight / scale) + 'px';
+}
+window.addEventListener('resize', reScale);
+reScale();
+
+// ── Preload all images ────────────────────────────────────────────────────
+function preloadAll(cb) {
+  var keys = Object.keys(SCREENS);
+  var done = 0;
+  var bar  = document.getElementById('loading-bar');
+  keys.forEach(function(k) {
+    var img   = new Image();
+    img.onload = img.onerror = function() {
+      bar.style.width = (++done / keys.length * 100) + '%';
+      if (done >= keys.length) cb();
+    };
+    img.src = SCREENS[k].img;
+  });
+}
+
+// ── Show a screen ─────────────────────────────────────────────────────────
+function showScreen(id) {
+  var sc = SCREENS[id];
+  if (!sc) { console.warn('Missing screen:', id); return; }
+  var fh = sc.fh || 0;
+
+  // Sticky header
+  if (fh > 0) {
+    stickyHdr.style.display = 'block';
+    stickyHdr.style.height  = fh + 'px';
+    stickyImg.src           = sc.img;
+    stickyImg.style.height  = sc.h + 'px';
+  } else {
+    stickyHdr.style.display = 'none';
+  }
+
+  // Body: clips the header portion via negative marginTop + overflow hidden
+  scrBody.style.height     = (sc.h - fh) + 'px';
+  scrBody.style.background = '#' + (sc.bg || 'ffffff');
+  scrImg.style.marginTop   = fh > 0 ? (-fh + 'px') : '0px';
+  scrImg.style.height      = sc.h + 'px';
+  scrImg.src               = sc.img;
+
+  scroll.scrollTop = 0;
+  buildHotspots(id, fh);
+}
+
+// ── Build hotspot layers ──────────────────────────────────────────────────
+function buildHotspots(screenId, fh) {
+  stickyHots.innerHTML = '';
+  scrHots.innerHTML    = '';
+  stickyHots.style.pointerEvents = 'none';
+
+  var hs = HOTSPOTS[String(screenId)] || [];
+  hs.forEach(function(h) {
+    var isHover  = (h.ev === 8);
+    var centerY  = h.y + h.h * 0.5;
+    var inHeader = fh > 0 && centerY < fh;
+
+    if (inHeader) {
+      stickyHots.style.pointerEvents = 'all';
+      stickyHots.appendChild(makeHot(h, isHover, 0));
+    } else {
+      scrHots.appendChild(makeHot(h, isHover, fh));
+    }
+  });
+}
+
+// ── Make a hotspot element ────────────────────────────────────────────────
+function makeHot(h, isHover, yOff) {
+  var d = document.createElement('div');
+  d.className    = 'hs';
+  d.style.left   = h.x + 'px';
+  d.style.top    = (h.y - yOff) + 'px';
+  d.style.width  = h.w + 'px';
+  d.style.height = h.h + 'px';
+
+  var target = h.target;
+  if (isHover) {
+    d.addEventListener('mouseenter', function() {
+      var t = SCREENS[target];
+      if (t) { scrImg.src = t.img; if (stickyImg.src) stickyImg.src = t.img; }
+    });
+    d.addEventListener('mouseleave', function() {
+      var b = SCREENS[baseId];
+      if (b) { scrImg.src = b.img; if (stickyImg.src) stickyImg.src = b.img; }
+    });
+  } else {
+    d.addEventListener('click', function(e) {
+      e.stopPropagation();
+      navigate(target);
+    });
+  }
+  return d;
+}
+
+// ── Navigate with a quick fade ────────────────────────────────────────────
+function navigate(id) {
+  if (!SCREENS[id]) return;
+  fade.style.transition    = 'opacity 0.14s ease';
+  fade.style.opacity       = '1';
+  fade.style.pointerEvents = 'all';
+  setTimeout(function() {
+    baseId = id;
+    showScreen(id);
+    fade.style.transition    = 'opacity 0.3s ease';
+    fade.style.opacity       = '0';
+    fade.style.pointerEvents = 'none';
+  }, 160);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+preloadAll(function() {
+  baseId = INTRO;
+  showScreen(INTRO);
+  var ld = document.getElementById('loading');
+  ld.style.opacity = '0';
+  setTimeout(function() { ld.style.display = 'none'; }, 600);
+});
+</script>
+</body>
+</html>

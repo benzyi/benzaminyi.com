@@ -84,14 +84,13 @@
     }
 
     .nav-logo {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: 15px;
+      display: flex;
+      align-items: center;
       text-decoration: none;
       color: var(--ink);
-      letter-spacing: -0.01em;
+      flex-shrink: 0;
     }
-    .nav-logo sup { color: var(--gold); font-size: 0.62em; }
+    .nav-logo svg { display: block; }
 
     .nav-links {
       display: flex;
@@ -134,67 +133,76 @@
 
     /* ─── Hero ──────────────────────────────────────── */
     .hero {
-      min-height: 100vh;
-      padding: var(--nav-h) var(--pad) clamp(56px, 9vh, 108px);
+      padding: calc(var(--nav-h) + 72px) var(--pad) clamp(72px, 12vh, 120px);
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      align-items: center;
+      text-align: center;
       position: relative;
-      overflow: hidden;
     }
 
-    .hero-eyebrow {
-      font-size: 10.5px;
+    .hero-headshot {
+      width: clamp(80px, 12vw, 130px);
+      height: auto;
+      margin-bottom: clamp(20px, 3vh, 36px);
+      opacity: 0;
+      animation: riseIn .7s ease .1s forwards;
+    }
+
+    .hero-intro {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(16px, 1.9vw, 22px);
+      color: var(--ink-soft);
+      line-height: 1.6;
+      max-width: 560px;
+      opacity: 0;
+      animation: riseIn .8s ease .2s forwards;
+    }
+    .hero-intro strong {
+      font-style: normal;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ── Slot machine ────────────────────────────────── */
+    .hero-slot-wrap {
+      margin-top: clamp(44px, 7vh, 80px);
+      opacity: 0;
+      animation: riseIn .8s ease .5s forwards;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-slot-label {
+      display: block;
+      font-size: 10px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--gold);
-      margin-bottom: 18px;
-      opacity: 0;
-      animation: riseIn .8s ease .15s forwards;
+      margin-bottom: 14px;
     }
-
-    .hero-name {
-      font-family: var(--serif);
-      font-weight: 900;
-      font-size: clamp(72px, 14.5vw, 210px);
-      line-height: 0.9;
-      letter-spacing: -0.035em;
-      color: var(--ink);
-      opacity: 0;
-      animation: riseIn .9s ease .3s forwards;
+    .hero-slot-viewport {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 860px;
+      /* fixed height: 2 lines at max font-size (54px × 1.15 × 2 ≈ 124px) */
+      height: clamp(62px, 9.5vw, 126px);
     }
-
-    .hero-name .line2 {
-      display: inline-block;
-    }
-
-    .hero-footer {
-      margin-top: clamp(28px, 4vw, 48px);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 24px;
-      opacity: 0;
-      animation: riseIn .8s ease .5s forwards;
-    }
-
-    .hero-tagline {
+    .hero-slot-item {
+      display: block;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
       font-family: var(--serif);
       font-style: italic;
-      font-size: clamp(17px, 2.4vw, 28px);
-      color: var(--ink-soft);
-      line-height: 1.4;
-      max-width: 460px;
-    }
-
-    .hero-location {
-      font-size: 10.5px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--ink-muted);
-      text-align: right;
-      line-height: 2;
-      flex-shrink: 0;
+      font-size: clamp(26px, 3.8vw, 54px);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--ink);
+      will-change: transform;
     }
 
     /* ─── Bottom Category Nav ───────────────────────── */
@@ -414,7 +422,10 @@
     }
 
     /* Aspect ratios */
-    .layout-all .card:nth-child(1) .card-img-wrap { padding-top: 62%; }
+    /* Featured large card: image grows to fill grid area, body stays natural height */
+    .layout-all .card:nth-child(1) { display: flex; flex-direction: column; }
+    .layout-all .card:nth-child(1) .card-img-wrap { flex: 1 0 0; min-height: 200px; }
+    .layout-all .card:nth-child(1) .card-body { flex: 0 0 auto; }
     .layout-all .card:nth-child(2) .card-img-wrap,
     .layout-all .card:nth-child(3) .card-img-wrap { padding-top: 68%; }
     .layout-all .card:nth-child(4) .card-img-wrap,
@@ -428,8 +439,15 @@
       object-fit: cover;
       object-position: top center;
       display: block;
-      transition: transform .6s cubic-bezier(.25,.46,.45,.94);
+      transition: transform .6s cubic-bezier(.25,.46,.45,.94), opacity .15s ease;
       background: var(--cream-mid);
+    }
+    .gif-freeze-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .15s ease;
     }
     .card:hover .card-img-wrap img {
       transform: scale(1.04);
@@ -454,6 +472,7 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
+      min-height: 80px;
     }
     .card-text { flex: 1; }
 
@@ -471,6 +490,10 @@
       letter-spacing: -0.01em;
       line-height: 1.25;
       color: var(--ink);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .card-sub {
       font-size: 11px;
@@ -557,13 +580,11 @@
 
     .about-bio {
       font-family: var(--serif);
-      font-style: italic;
       font-size: clamp(17px, 2.3vw, 26px);
       line-height: 1.5;
       color: var(--ink-soft);
     }
     .about-bio strong {
-      font-style: normal;
       color: var(--ink);
     }
 
@@ -742,8 +763,9 @@
     }
 
     .resume-bar-track {
-      flex: 1;
-      height: 3px;
+      width: 80px;
+      flex-shrink: 0;
+      height: 2px;
       background: var(--cream-dark);
       border-radius: 2px;
       overflow: hidden;
@@ -759,6 +781,44 @@
     .resume-bar-ai {
       transition: width 1.6s cubic-bezier(0.45, 0, 0.55, 1);
     }
+
+    /* ── Heading + sublabel row ──────────────────────── */
+    .resume-block-heading-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .resume-block-subhead {
+      font-size: 9px;
+      color: var(--ink-muted);
+      letter-spacing: 0.06em;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    /* ── Favorites segment rectangles ───────────────── */
+    .resume-dot-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .resume-dot-track {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .resume-dot {
+      flex: 1;
+      height: 2px;
+      background: var(--cream-dark);
+    }
+    /* Only the outer ends get rounded corners */
+    .resume-dot:first-child { border-radius: 2px 0 0 2px; }
+    .resume-dot:last-child  { border-radius: 0 2px 2px 0; }
 
     .resume-tools-list {
       font-size: 13px;
@@ -1089,6 +1149,41 @@
     }
     .modal-img-dot:hover { opacity: 0.7; }
 
+    /* ── In-image arrow nav ──────────────────────────── */
+    .img-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px; height: 38px;
+      background: rgba(244, 239, 228, 0.88);
+      border: 1px solid rgba(184, 137, 46, 0.22);
+      border-radius: 50%;
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease, background .18s ease, transform .18s ease;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .img-nav-btn.visible {
+      opacity: 0.65;
+      pointer-events: all;
+    }
+    .img-nav-btn:hover {
+      opacity: 1;
+      background: rgba(244, 239, 228, 1);
+      transform: translateY(-50%) scale(1.07);
+    }
+    .img-nav-prev { left: 14px; }
+    .img-nav-next { right: 14px; }
+
     @media (max-width: 860px) {
       .modal-inner {
         grid-template-columns: 1fr;
@@ -1176,8 +1271,8 @@
         letter-spacing: 0.16em;
         margin-bottom: 14px;
       }
-      .hero-name {
-        font-size: clamp(58px, 18vw, 80px);
+      .hero-intro {
+        font-size: clamp(15px, 4.5vw, 19px);
       }
       /* Stack tagline + location vertically, no overlap */
       .hero-footer {
@@ -1242,7 +1337,7 @@
 
     /* Extra narrow phones */
     @media (max-width: 390px) {
-      .hero-name { font-size: 52px; }
+      .hero-intro { font-size: 15px; }
       .nav-links a { display: none; }
       .nav-links li:last-child a { display: block; }
     }
@@ -1256,31 +1351,37 @@
 
   <!-- ── Nav ── -->
   <nav id="main-nav">
-    <a href="#top" class="nav-logo">Designs by<sup>2</sup></a>
+    <a href="#top" class="nav-logo" aria-label="Benzamin Yi — home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 203.74 66.38" height="24" role="img" aria-hidden="true">
+        <style>.lb1{fill:var(--ink)}.lb2{fill:var(--gold)}</style>
+        <rect class="lb2" x="61.87" y="6.62" width="51.08" height="51.08" rx="11.68" ry="11.68"/>
+        <path class="lb1" d="M3.09,32.68h19.91c9.03,0,15.41,5.94,15.41,14.4,0,7.96-6.37,14.4-15.41,14.4H3.09v-28.8ZM10.29,39.16v15.84h12.71c6.23,0,7.96-4.1,7.96-7.92s-1.91-7.92-7.96-7.92h-12.71Z"/>
+        <path class="lb1" d="M42.54,61.48v-28.8h29.84v6.48h-22.64v4.86h20.12v6.12h-20.12v4.86h22.64v6.48h-29.84Z"/>
+        <path class="lb1" d="M75.59,41.46c0-6.08,6.66-9.36,15.8-9.36,6.16,0,12.31.94,14.58,2.23l-1.37,6.12c-2.41-1.44-8.53-2.2-13.46-2.2-6.08,0-8.42.86-8.42,2.38,0,5.29,24.12.22,24.12,11.73,0,5.15-5.11,9.68-16.02,9.68-5.08,0-11.66-.43-14.65-1.84l.29-6.59c2.99,1.44,8.42,2.27,14.58,2.27s8.64-1.12,8.64-2.45c0-4.93-24.08-.07-24.08-11.99Z"/>
+        <path class="lb1" d="M111.12,32.68h7.2v28.8h-7.2v-28.8Z"/>
+        <path class="lb1" d="M140.53,44.02h15.8v16.31c-2.3.86-8.39,1.73-12.85,1.73-13.75,0-20.45-6.19-20.45-15.01s7.02-14.9,21.09-14.9c5.22,0,9.83.58,12.67,1.26l-.68,6.08c-3.24-.61-6.62-1.12-12.31-1.12-9.61,0-13.35,3.35-13.35,8.53,0,5.47,4.1,8.85,12.92,8.85,1.66,0,3.82-.11,5.9-.29v-5.33h-8.75v-6.12Z"/>
+        <path class="lb1" d="M170.99,41.28h-1.8v20.19h-7.2v-28.8h10.12l19.04,18.18h1.8v-18.18h7.2v28.8h-8.71l-20.45-20.19Z"/>
+        <path class="lb1" d="M51.31,2.3h24.37c8.03,0,11.16,3.17,11.16,7.88,0,2.77-1.01,4.9-3.46,6.19,2.45,1.29,3.46,3.46,3.46,6.3,0,4.82-3.1,8.42-11.12,8.42h-24.41V2.3ZM58.51,8.42v5.69h17.42c2.63,0,3.42-1.51,3.42-2.7,0-1.12-.79-2.99-3.42-2.99h-17.42ZM58.51,19.29v5.69h17.42c2.66,0,3.42-1.73,3.42-2.95,0-1.15-.72-2.74-3.42-2.74h-17.42Z"/>
+        <path class="lb1" d="M101.57,21.96l-15.08-19.65h8.39l9.43,12.6h1.44l9.03-12.6h8.53l-14.54,19.33v9.47h-7.2v-9.14Z"/>
+      </svg>
+    </a>
     <ul class="nav-links">
       <li><a href="#portfolio">Portfolio</a></li>
       <li><a href="#bio">Bio</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="contact.html">Contact</a></li>
       <li><a href="resume.html" class="nav-resume-btn">Résumé</a></li>
     </ul>
   </nav>
 
   <!-- ── Hero ── -->
   <section class="hero" id="top">
-    <p class="hero-eyebrow">Data Visualization · Design · Creative Technology</p>
-    <h1 class="hero-name" id="hero-name">
-      <span class="line1">Benzamin</span><br>
-      <span class="line2">Yi</span>
-    </h1>
-    <div class="hero-footer">
-      <p class="hero-tagline">
-        Making data beautiful, digestible, and impactful through visual storytelling.
-      </p>
+    <img class="hero-headshot" src="headshot-illustrated.svg" alt="Benzamin Yi">
+    <p class="hero-intro"><strong>Benzamin</strong> is a data visualization designer, creative technologist, published researcher, and adjunct lecturer based in Los Angeles.</p>
+    <div class="hero-slot-wrap">
+      <span class="hero-slot-label">He has designed</span>
+      <div class="hero-slot-viewport" id="hero-slot-viewport"></div>
     </div>
-    <a href="#portfolio" class="section-next hero-cue" aria-label="Scroll to work">↓</a>
   </section>
-
-  <div class="hr"></div>
 
   <!-- ── Work ── -->
   <section class="work-section" id="portfolio">
@@ -1301,7 +1402,6 @@
       <button class="tab-btn" data-cat="infographics" role="tab" aria-selected="false">Infographics</button>
       <button class="tab-btn" data-cat="promo"        role="tab" aria-selected="false">Promos</button>
       <button class="tab-btn" data-cat="logos"        role="tab" aria-selected="false">Logos</button>
-      <button class="tab-btn" data-cat="slideshows"   role="tab" aria-selected="false">Slideshows</button>
     </div>
 
     <!-- Grid (rendered by JS) -->
@@ -1318,8 +1418,6 @@
       <button class="bottom-cat-btn" data-cat="promo">Promos</button>
       <span class="bottom-cat-sep">·</span>
       <button class="bottom-cat-btn" data-cat="logos">Logos</button>
-      <span class="bottom-cat-sep">·</span>
-      <button class="bottom-cat-btn" data-cat="slideshows">Slideshows</button>
     </div>
   </section>
 
@@ -1329,7 +1427,7 @@
   <section class="about-strip" id="bio" data-reveal>
     <div>
       <span class="about-label">Bio</span>
-      <img class="about-headshot" src="headshot.jpg" alt="Benzamin Yi">
+      <img class="about-headshot" src="benzHeadshot.jpg" alt="Benzamin Yi">
     </div>
     <div>
       <p class="about-bio">
@@ -1338,45 +1436,43 @@
         He was formerly the Global Director of Data Visualization &amp; Prototype Design at Nike.
       </p>
       <p class="about-bio" style="margin-top: 1.2em;">
-        Before Nike, he was a UI/UX Designer at NBCUniversal in New York and a freelance graphic designer
+        Before Nike, he was a UI/UX Designer + Data Visualization Consultant at NBCUniversal in New York and a freelance graphic designer
         working with nonprofits and political consulting firms. Earlier in his career, he spent five years at a political
         economics think tank in Washington, D.C. doing research, design, and communications work.
       </p>
       <p class="about-bio" style="margin-top: 1.2em;">
         He studied philosophy — with a double minor in political science and environmental analysis &amp; design —
-        at UC Irvine. He started designing in 2004 out of personal curiosity and has worked as a
-        professional designer in various capacities since 2008.
+        at UC Irvine, where he focused his studies on international fairness in climate change action and,
+        separately, the epistemology of stand-up comedy. He started designing in 2004 out of personal curiosity
+        and has worked as a professional designer in various capacities since 2008.
       </p>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66.38 60.77" height="24" style="display:block;margin-top:20px;opacity:0.5" aria-hidden="true">
+        <style>.lm1{fill:var(--gold)}</style>
+        <path class="lm1" d="M47.75,15.4h1.31l5.57-7.76c-2.04-1.74-4.68-2.8-7.58-2.8h-7.21l7.91,10.56Z"/>
+        <path class="lm1" d="M25.01,21.9c0-1.05-.66-2.49-3.12-2.49H7.65v5.18h14.24c2.43,0,3.12-1.57,3.12-2.69Z"/>
+        <path class="lm1" d="M51.82,21.54v8.63h-6.56v-8.33l-13.04-16.99h-4.66c3,1.18,4.28,3.4,4.28,6.26,0,2.53-.92,4.46-3.15,5.64,2.23,1.18,3.15,3.15,3.15,5.74,0,4.4-2.82,7.68-10.14,7.68H7.65v14.07c0,6.45,5.23,11.68,11.68,11.68h2.81l.23-5.22c2.72,1.31,7.68,2.07,13.29,2.07s7.87-1.02,7.87-2.23c0-4.5-21.95-.07-21.95-10.93,0-5.54,6.07-8.53,14.4-8.53,5.61,0,11.22.85,13.29,2.03l-1.25,5.58c-2.2-1.31-7.78-2-12.27-2-5.54,0-7.68.79-7.68,2.17,0,4.82,21.98.2,21.98,10.7,0,2.45-1.28,4.73-3.9,6.37h.89c6.45,0,11.68-5.23,11.68-11.68v-27.72c0-1.21-.18-2.38-.52-3.47l-6.39,8.49Z"/>
+        <path class="lm1" d="M21.89,9.5h-11.88c-1.13,1.49-1.9,3.26-2.2,5.18h14.08c2.4,0,3.12-1.38,3.12-2.46,0-1.02-.72-2.72-3.12-2.72Z"/>
+      </svg>
 
       <div class="bio-bars">
         <div class="bio-bars-grid">
           <div class="resume-block">
-            <h3 class="resume-block-heading">Favorites</h3>
-            <div class="resume-bar-row"><span class="resume-bar-label">Illustrator</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:98%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Photoshop</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:94%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">InDesign</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:91%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Figma</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:88%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">d3</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:76%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">React</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:82%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">VS Code</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:85%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Cursor</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:71%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Copilot</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:64%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">GPT</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:62%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Clawbot</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:50%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Claude</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:68%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Typography</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:99%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Small Multiples</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:97%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Sustainability</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:95%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Dogs</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:100%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Basketball</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:93%"></div></div></div>
+            <div class="resume-block-heading-wrap">
+              <h3 class="resume-block-heading">Favorites</h3>
+              <span class="resume-block-subhead">Measured by Preference + Interest</span>
+            </div>
+            <div id="favorites-dots"></div>
           </div>
           <div class="resume-block">
-            <h3 class="resume-block-heading">Languages</h3>
+            <div class="resume-block-heading-wrap">
+              <h3 class="resume-block-heading">Languages</h3>
+              <span class="resume-block-subhead">Measured by Fluency + Confidence</span>
+            </div>
             <div class="resume-bar-row"><span class="resume-bar-label">English</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:100%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Korean</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:70%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Japanese</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:48%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">French</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:30%"></div></div></div>
-            <div class="resume-bar-row"><span class="resume-bar-label">Spanish</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:30%"></div></div></div>
+            <div class="resume-bar-row"><span class="resume-bar-label">Korean</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:42%"></div></div></div>
+            <div class="resume-bar-row"><span class="resume-bar-label">Japanese</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:29%"></div></div></div>
+            <div class="resume-bar-row"><span class="resume-bar-label">French</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:18%"></div></div></div>
+            <div class="resume-bar-row"><span class="resume-bar-label">Spanish</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:18%"></div></div></div>
             <div class="resume-bar-row"><span class="resume-bar-label">Design</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:100%"></div></div></div>
             <div class="resume-bar-row"><span class="resume-bar-label">JavaScript</span><div class="resume-bar-track"><div class="resume-bar-fill" style="width:70%"></div></div></div>
             <div class="resume-bar-row"><span class="resume-bar-label">AI</span><div class="resume-bar-track"><div class="resume-bar-fill resume-bar-ai" id="ai-bar-fill" style="width:60%"></div></div></div>
@@ -1386,39 +1482,19 @@
 
     </div>
   </section>
-  <div style="text-align:center; margin-top: clamp(28px, 4vh, 48px); padding-bottom: clamp(40px, 6vh, 72px);">
+  <div style="text-align:center; margin-top: clamp(28px, 4vh, 48px); padding-bottom: clamp(40px, 6vh, 72px); display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
     <a href="resume.html" class="bio-learn-btn">Learn More</a>
+    <a href="contact.html" class="bio-learn-btn">Let's Connect</a>
   </div>
-
-  <div class="hr"></div>
-
-  <!-- ── Contact ── -->
-  <section class="contact-section" id="contact">
-    <div class="contact-inner">
-      <div class="contact-left">
-        <p class="section-eyebrow">Contact</p>
-        <h2 class="contact-heading">Let's Connect.</h2>
-        <p class="contact-sub">Emails, calls, or in-person — all welcome.</p>
-      </div>
-      <div class="contact-right">
-        <div class="contact-item">
-          <span class="contact-label">Email</span>
-          <span class="contact-value">benzaminyi at gmail dot com</span>
-        </div>
-        <div class="contact-item">
-          <span class="contact-label">LinkedIn</span>
-          <a href="https://www.linkedin.com/in/benzyi" target="_blank" rel="noopener" class="contact-link">linkedin.com/in/benzyi</a>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- ── Project Modal ── -->
   <div class="modal-backdrop" id="modal-backdrop"></div>
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Project detail">
     <div class="modal-inner">
-      <div class="modal-img-pane">
+      <div class="modal-img-pane" id="modal-img-pane">
         <img id="modal-img" src="" alt="">
+        <button class="img-nav-btn img-nav-prev" id="img-nav-prev" aria-label="Previous image">&#8249;</button>
+        <button class="img-nav-btn img-nav-next" id="img-nav-next" aria-label="Next image">&#8250;</button>
         <div class="modal-img-dots" id="modal-img-dots"></div>
       </div>
       <div class="modal-info-pane">
@@ -1440,11 +1516,11 @@
           </div>
           <div class="modal-field" id="mf-desc">
             <div class="modal-field-label">About this project</div>
-            <div class="modal-field-value serif" id="modal-desc"></div>
+            <div class="modal-field-value" id="modal-desc"></div>
           </div>
           <div class="modal-field" id="mf-process">
             <div class="modal-field-label">Design process</div>
-            <div class="modal-field-value serif" id="modal-process"></div>
+            <div class="modal-field-value" id="modal-process"></div>
           </div>
           <div class="modal-field" id="mf-tools">
             <div class="modal-field-label">Tools &amp; technologies</div>
@@ -1461,7 +1537,14 @@
 
   <!-- ── Footer ── -->
   <footer>
-    <p class="footer-copy">© 2026 Benzamin Yi · Designs by<sup>2</sup></p>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66.38 60.77" height="22" style="opacity:0.45;flex-shrink:0" aria-hidden="true">
+      <style>.lmf{fill:var(--gold)}</style>
+      <path class="lmf" d="M47.75,15.4h1.31l5.57-7.76c-2.04-1.74-4.68-2.8-7.58-2.8h-7.21l7.91,10.56Z"/>
+      <path class="lmf" d="M25.01,21.9c0-1.05-.66-2.49-3.12-2.49H7.65v5.18h14.24c2.43,0,3.12-1.57,3.12-2.69Z"/>
+      <path class="lmf" d="M51.82,21.54v8.63h-6.56v-8.33l-13.04-16.99h-4.66c3,1.18,4.28,3.4,4.28,6.26,0,2.53-.92,4.46-3.15,5.64,2.23,1.18,3.15,3.15,3.15,5.74,0,4.4-2.82,7.68-10.14,7.68H7.65v14.07c0,6.45,5.23,11.68,11.68,11.68h2.81l.23-5.22c2.72,1.31,7.68,2.07,13.29,2.07s7.87-1.02,7.87-2.23c0-4.5-21.95-.07-21.95-10.93,0-5.54,6.07-8.53,14.4-8.53,5.61,0,11.22.85,13.29,2.03l-1.25,5.58c-2.2-1.31-7.78-2-12.27-2-5.54,0-7.68.79-7.68,2.17,0,4.82,21.98.2,21.98,10.7,0,2.45-1.28,4.73-3.9,6.37h.89c6.45,0,11.68-5.23,11.68-11.68v-27.72c0-1.21-.18-2.38-.52-3.47l-6.39,8.49Z"/>
+      <path class="lmf" d="M21.89,9.5h-11.88c-1.13,1.49-1.9,3.26-2.2,5.18h14.08c2.4,0,3.12-1.38,3.12-2.46,0-1.02-.72-2.72-3.12-2.72Z"/>
+    </svg>
+    <p class="footer-copy">© 2026 Benzamin Yi</p>
   </footer>
 
   <script>
@@ -1474,6 +1557,7 @@
     const FMT  = '?format=1500w';
 
     const projects = [
+
       // ── Data Visualization ──
       {
         cat: 'data-viz', featured: true, favorite: true,
@@ -1482,23 +1566,12 @@
           BASE + '1521603966262-YJ89BPYZU22891A1IB0B/Main+Original-01.png' + FMT,
         ],
         title: 'The 1992 Los Angeles Riots',
-        sub: 'Immersive prototype · Parsons, 2018',
+        sub: 'Immersive Prototype',
         client: 'Parsons School of Design (Academic)',
         year: '2018',
-        desc: 'An immersive prototype charting the hourly timeline of the LA Riots as recorded by the Los Angeles Times. Built for the Data Visualization and Information Aesthetics course taught by Professor William Bevington.',
-        process: 'The project combined archival news data with geographic mapping to build a time-lapse view of the riots. Animation and pacing were used to convey the emotional weight of the events without sensationalizing.',
-        tools: ['D3.js', 'JavaScript', 'GIS data', 'Adobe Illustrator'],
-      },
-      {
-        cat: 'data-viz',
-        imgs: [BASE + '1521602838271-YONUBVJNXZD47DUSK4EB/undp.gif' + FMT],
-        title: 'South Africa — Income Inequality',
-        sub: 'D3 · UNDP Africa Bureau, 2018',
-        client: 'United Nations Development Programme, Africa Bureau',
-        year: '2018',
-        desc: 'An exploration of Sub-Saharan Africa\'s most developed nation and its paradox as the world\'s most unequal country by income. Created with D3.js for Major Studio 1 at Parsons, and presented to the chief economist and staff at the UNDP Africa Bureau.',
-        process: 'Qualitative and quantitative data from the UNDP\'s recent report on income inequality in Sub-Saharan Africa were combined into an interactive narrative. The visual hierarchy guides viewers from macro regional context down to South Africa\'s specific Gini coefficients.',
-        tools: ['D3.js', 'JavaScript', 'HTML/CSS', 'Adobe Illustrator'],
+        desc: 'An immersive prototype charting archival news data from the LA Times that provided a timeline of events, photos from photojournalists with Getty, AP, LA Times, and other media sources, a dataset from LA Times with everyone whose deaths were related to the riots, and a spattering of sources to connect the dots and provide more substance to the whole event. Animation and pacing were used to convey the emotional weight of the events without sensationalizing. As there are no memorials for this tragic event that burned down Koreatown and impacted the lives of so many minorities including myself, I wanted to shed more light on those who lost their lives and be able to make a qualitative connection to the events, photos, and stories of these victims.',
+        process: '',
+        tools: ['D3.js', 'HTML/CSS', 'Adobe Illustrator'],
       },
       {
         cat: 'data-viz', favorite: true,
@@ -1506,13 +1579,24 @@
           BASE + '1521605289761-PEZJOZ1KP6TPX3RBDUBQ/eames1.gif' + FMT,
           BASE + '1521605339102-ULID0JHRUIVM596124LK/Home+v1-04.png' + FMT,
         ],
-        title: 'Eames Chair Interactive',
-        sub: 'Interactive data exploration',
-        client: 'Personal / Academic Project',
+        title: 'The Maintenance and Cleaning of Eames Chairs',
+        sub: 'Immersive Prototype',
+        client: 'Parsons School of Design (Academic)',
         year: '2018',
-        desc: 'An interactive exploration of the Eames Lounge Chair — its materials, construction history, and cultural significance — visualized as an annotated object study.',
+        desc: 'An interactive exploration of a lesser known set of qualitative data available for Eames chairs sold by Herman Miller. There\'s a cleaning and maintenance guide which is somewhat generic, but is interesting when considering that Eames typically used as few material types as possible — in this case, just four materials covers a large collection of their chairs. This is not an exhaustive list but it was an exhausting process as each chair is manually drawn by myself, each node and curve. The idea was that if this ever gets sponsored by Herman Miller or the Eames Foundation, I will finish the rest of the collection. TBD!',
         process: '',
-        tools: ['D3.js', 'JavaScript', 'CSS Animation'],
+        tools: ['Adobe Illustrator', 'Invision'],
+      },
+      {
+        cat: 'data-viz', favorite: true,
+        imgs: [BASE + '1529437738075-F7AI0EH5J999IOXX1ATB/trueTuna.png' + FMT],
+        title: 'True Tuna',
+        sub: 'Static Data Visualization',
+        client: 'Parsons School of Design (Academic)',
+        year: '2017',
+        desc: 'A static data visualization capturing 8 true tunas, giving the user a chance to find any patterns in differentiating the two main types of tuna: bluefin and yellowfin. There is a slight exaggeration to the largest tuna\'s scale to emphasize the point. Printed on a 36" × 36" poster; pixel perfect.',
+        process: '',
+        tools: ['Adobe Illustrator'],
       },
       {
         cat: 'data-viz',
@@ -1521,195 +1605,179 @@
           BASE + '1521604893551-OH6S8SMYJDW6V6HB2WQT/SQLcrop.png' + FMT,
         ],
         title: 'Controls & Convertibles',
-        sub: 'Data Visualization',
-        client: '',
-        year: '',
-        desc: '',
+        sub: 'Data Collection and Visualization',
+        client: 'Parsons School of Design (Academic)',
+        year: '2018',
+        desc: 'Using IR and tilt sensor data to determine the style of TV watching, the behavioral habits, and frequency. In a way, it also tells you how much we infer, and how little we track to be able to determine the nuances within the data that is collected. We see it the most in our collection of personal data because we have our own perspective of what actually happened versus what is recorded in a simplified binary manner.',
         process: '',
-        tools: ['JavaScript', 'D3.js'],
-      },
-      {
-        cat: 'data-viz', favorite: true,
-        imgs: [BASE + '1529437738075-F7AI0EH5J999IOXX1ATB/trueTuna.png' + FMT],
-        title: 'True Tuna',
-        sub: 'Data Visualization',
-        client: '',
-        year: '',
-        desc: 'A data visualization examining the supply chain and mislabeling of tuna in the United States seafood industry.',
-        process: '',
-        tools: ['D3.js', 'Adobe Illustrator'],
+        tools: ['Adobe Illustrator', 'Python', 'SQL'],
       },
       {
         cat: 'data-viz',
         imgs: [BASE + '1564876488787-KXEKSDTGOCGXSC0MQOE1/1.png' + FMT],
-        title: 'Client Work — 01',
-        sub: 'Data visualization · Corporate, 2019',
+        title: 'Quarterly Report Viz',
+        sub: 'Static Data Visualization',
         client: 'Corporate Client (confidential)',
         year: '2019',
-        desc: 'Quarterly bar and trend-line chart created for a corporate client. All data and client identity have been replaced with dummy data.',
+        desc: 'Quarterly bar and trend-line chart created for a corporate client. One of many visualizations with multiple layers, but this one particularly had a request to show many levels of measurements in a simpler way. I wanted to show quarters while still capturing years, and wanted to show negative values without taking away from the zero value. All data and client identity have been replaced with dummy data.',
         process: '',
-        tools: ['Adobe Illustrator', 'Figma'],
+        tools: ['Adobe Illustrator'],
       },
       {
         cat: 'data-viz',
         imgs: [BASE + '1564876490300-257Q2PPEF5MZ2B5ER0RV/2.png' + FMT],
-        title: 'Client Work — 02',
-        sub: 'Data visualization · Corporate, 2019',
+        title: 'The One-Pager Infographic',
+        sub: 'Static Data Visualization',
         client: 'Corporate Client (confidential)',
         year: '2019',
-        desc: 'Full-page executive dashboard infographic created for a corporate client. All data and client identity have been replaced with dummy data.',
+        desc: 'Full-page executive dashboard infographic created for a corporate client. There were very specific asks for certain visualization types that I had to make work with new data — a challenge — but a little improvising and a couple of recommendations helped take this to the finish line. All data and client identity have been replaced with dummy data.',
         process: '',
-        tools: ['Adobe Illustrator', 'Figma'],
+        tools: ['Adobe Illustrator'],
       },
       {
         cat: 'data-viz',
         imgs: [BASE + '1564876489505-OKMOWITDH2SGF6RWRZUK/3.png' + FMT],
-        title: 'Client Work — 03',
-        sub: 'Data visualization · Corporate, 2019',
+        title: 'Data Visualizations Filtering Data',
+        sub: 'Data Visualization Dashboard',
         client: 'Corporate Client (confidential)',
         year: '2019',
-        desc: 'Interactive analytics dashboard created for a corporate client. All data and client identity have been replaced with dummy data.',
+        desc: 'One of many visualizations in a UI dashboard I designed. I liked this one particularly because the donut was a way to interact with the bar graph. In hindsight, I would have pushed back more on having so many values on a donut chart as I usually preach the "no more than 3 values per pie/donut" rule.',
         process: '',
-        tools: ['Adobe Illustrator', 'Figma'],
+        tools: ['Adobe Illustrator'],
       },
       {
         cat: 'data-viz',
         imgs: [BASE + '1564876489896-VBTO9P2G9C1FGESILERP/4.png' + FMT],
-        title: 'Client Work — 04',
-        sub: 'Data visualization · Corporate, 2019',
+        title: 'Data Manipulation Tool',
+        sub: 'Data Visualization Tool',
         client: 'Corporate Client (confidential)',
         year: '2019',
-        desc: 'Filtering UI with dot/lollipop chart created for a corporate client. All data and client identity have been replaced with dummy data.',
+        desc: 'A visualization tool I designed that was very complex because we had existing data, but also wanted to give users the ability to manipulate the data with their own predictions. Thus levers and toggles were introduced to help users navigate, modify, and save their data visualization to their liking.',
         process: '',
-        tools: ['Adobe Illustrator', 'Figma'],
+        tools: ['Adobe Illustrator'],
       },
 
       // ── Infographics ──
       {
         cat: 'infographics', featured: true, favorite: true,
         imgs: [BASE + '1476219901032-X0IB0DJQMVOOSRG5LTKR/Infographics-01.png' + FMT],
-        title: 'Infographic — Vol. 1',
-        sub: 'Research infographic',
+        title: 'Cleveland Model',
+        sub: 'Research Infographic',
         client: 'The Democracy Collaborative',
-        year: '',
-        desc: 'Research infographic created in collaboration with policy authors to visually communicate findings on worker ownership and economic democracy.',
-        process: 'Worked closely with researchers to identify the clearest way to represent complex economic data without losing nuance. Every chart choice was deliberate — no decoration without data function.',
+        year: '2014',
+        desc: 'Research infographic created in collaboration with policy researchers to visually communicate findings on worker ownership and economic democracy. Known as the Cleveland Model — an actual economic system set up in Cleveland, Ohio — I created this graphic to help explain this system to a broader audience. This became a flagship graphic for the think tank.',
+        process: '',
+        tools: ['Adobe Illustrator'],
+      },
+      {
+        cat: 'infographics', favorite: true,
+        imgs: [BASE + '1476331667352-4Y6X2NO7G6605VG5IWWP/Infographics-05.png' + FMT],
+        title: 'Union Co-op Model',
+        sub: 'Research Infographic',
+        client: 'The Democracy Collaborative',
+        year: '2013',
+        desc: 'One of my first qualitative infographics attempting to break down a complex concept like a union co-operative business model. I needed this for myself as a research assistant to better understand how this system works. It turns out most people needed this to understand it. This design style would translate to explaining other concepts in the future for this think tank.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'infographics',
         imgs: [BASE + '1476330638833-8KQMQ4AU4RS4EBEG2V2J/Final+v2-01.png' + FMT],
-        title: 'Community Land Trusts',
-        sub: 'Shareable · 2014',
-        client: 'Shareable',
+        title: 'The Normalized State of America',
+        sub: 'Graphic Design',
+        client: 'Advocacy Advisors',
         year: '2014',
-        desc: 'Infographic explaining the why and how of community land trusts, published in Shareable magazine.',
+        desc: 'Used to represent the country equally for each state without skewing it for land mass. This is a base so that it can be adjusted from here to perhaps resize to population size, economy size, etc. Choropleth maps are probably the least accurate in measuring political statistics, yet we use it all the time.',
         process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'infographics',
         imgs: [BASE + '1476331742024-EIT2F5AUI70MTPO21AJ7/Infographics-02.png' + FMT],
-        title: 'Infographic — Vol. 2',
-        sub: 'Research infographic',
+        title: 'Balance Sheet',
+        sub: 'Research Infographic',
         client: 'The Democracy Collaborative',
-        year: '', desc: '', process: '',
+        year: '2013',
+        desc: 'I\'m usually not a fan of pictographs because they typically misrepresent data. This is one of my earlier works in the information graphic space, but I\'m glad that I already had the ethical chops of accurately representing the data — assets held by major banks compared to co-op banks and credit unions. The purpose was to tell people that there are other viable options out there, especially in the wake of the 2008 financial crisis.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'infographics',
         imgs: [BASE + '1476219901041-DP32UDD9WQKKLM0J9OHZ/Infographics-03.png' + FMT],
-        title: 'Infographic — Vol. 3',
-        sub: 'Research infographic',
-        client: '', year: '', desc: '', process: '',
-        tools: ['Adobe Illustrator'],
-      },
-      {
-        cat: 'infographics', favorite: true,
-        imgs: [BASE + '1476331667352-4Y6X2NO7G6605VG5IWWP/Infographics-05.png' + FMT],
-        title: 'Infographic — Vol. 5',
-        sub: 'Research infographic',
-        client: '', year: '', desc: '', process: '',
+        title: 'Differences in Findings',
+        sub: 'Research Infographic',
+        client: 'Createquity',
+        year: '2016',
+        desc: 'A comparison of survey data in the arts industry with a specific location of California, made when I was on the Editorial Staff for Createquity. Looking at it more than a decade later, it takes a minute to understand how I represented the two surveys, but it eventually clicks. This is one reason I don\'t like stacked area charts — it\'s difficult to tell if you\'re looking at two wholes or one whole plus a part of a whole that\'s "underneath" the first. Lessons learned.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'infographics',
         imgs: [BASE + '1476331423431-BTQI1ABUNK59CVTJF8YF/Infographics-04.png' + FMT],
-        title: 'Infographic — Vol. 4',
-        sub: 'Research infographic',
-        client: '', year: '', desc: '', process: '',
+        title: 'New Economy Coverage by WSJ',
+        sub: 'Op-Ed Graphic Design',
+        client: 'Huffington Post',
+        year: '2014',
+        desc: 'Sprinkle in some selective data picking for a little media hype — this was a supporting graphic for an article on Huffington Post bringing attention to WSJ\'s lack of coverage of the "new economy." This was one of four graphics of the same style spanning different keywords, including one that dates back to the founding of WSJ.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'infographics',
         imgs: [BASE + '1476219902755-5GH9JCGXF29QR1Z29O5G/Infographics-06.png' + FMT],
-        title: 'Infographic — Vol. 6',
-        sub: 'Research infographic',
-        client: '', year: '', desc: '', process: '',
-        tools: ['Adobe Illustrator'],
-      },
-      {
-        cat: 'infographics',
-        imgs: [BASE + '1476331185725-102W5ARF879R0TIMIN7W/Median+Net+Worth.png' + FMT],
-        title: 'Median Net Worth',
-        sub: 'Data infographic',
-        client: '', year: '',
-        desc: 'A data infographic visualizing median net worth disparities across racial and economic groups in the United States.',
+        title: 'Income Inequality in 2014',
+        sub: 'Research Infographic',
+        client: 'The Democracy Collaborative',
+        year: '2014',
+        desc: 'Using pixel magnitude to show income inequality in the U.S. This was 2014 data from the National Bureau of Economic Research. I cut this one out because it\'s extremely large — if you\'re curious, you can request the full file or do the math yourself: it\'s 160K households in the 0.1% compared to 142M households in the 90%.',
         process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'infographics',
         imgs: [BASE + '1476221743512-R8ZDJ91HHAEYL8G7HWWD/output_nOqRas.gif' + FMT],
-        title: 'Animated Infographic',
-        sub: 'Motion · Data design',
-        client: '', year: '',
-        desc: 'An animated infographic using motion to sequence data reveals and guide the reader\'s eye through a complex dataset.',
+        title: 'Trend Charts for LA Times Op-Ed',
+        sub: 'Op-Ed Graphic Design',
+        client: 'The Democracy Collaborative',
+        year: '2015',
+        desc: 'One of my final graphics for the Democracy Collaborative — a supplemental graphic to loosely show an upward trend across several data points over the same time period. It was for an op-ed piece we were submitting to the Los Angeles Times for consideration. If anything, this was my foray into a cleaner design style looking at larger datasets.',
         process: '',
-        tools: ['Adobe After Effects', 'Adobe Illustrator'],
+        tools: ['Adobe Illustrator'],
       },
 
       // ── Promo ──
       {
-        cat: 'promo', featured: true,
-        imgs: [BASE + '1476280797844-4O1QUQ7B3H7SMSW8MRC2/Promo-01.png' + FMT],
-        title: 'Promo Design — 01',
-        sub: 'Promotional design',
-        client: '', year: '', desc: '', process: '',
-        tools: ['Adobe Illustrator', 'Adobe Photoshop'],
-      },
-      {
-        cat: 'promo',
-        imgs: [BASE + '1476280797896-M1S55BHGEWKPSNMO1BFB/Promo-02.png' + FMT],
-        title: 'Promo Design — 02',
-        sub: 'Promotional design',
-        client: '', year: '', desc: '', process: '',
-        tools: ['Adobe Illustrator'],
-      },
-      {
         cat: 'promo',
         imgs: [BASE + '1476280798541-9YAN2TWUDFNV872IBSZ1/Promo-03.png' + FMT],
-        title: 'Promo Design — 03',
-        sub: 'Promotional design',
-        client: '', year: '', desc: '', process: '',
+        title: 'The Next American Revolution',
+        sub: 'Promotional Design',
+        client: 'The Democracy Collaborative',
+        year: '2014',
+        desc: 'Promotional design for an independent film documentary screening depicting growing inequality — in this case, income and wealth in America.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'promo',
         imgs: [BASE + '1476280798361-FVKXH4IEBQAQCOTNX12N/Promo-04.png' + FMT],
-        title: 'Promo Design — 04',
-        sub: 'Promotional design',
-        client: '', year: '', desc: '', process: '',
+        title: 'Le Ballon Rouge',
+        sub: 'Promotional Design',
+        client: 'Parsons School of Design (Academic)',
+        year: '2014',
+        desc: 'A movie poster mock for a Typography course I took at Parsons. I still enjoy this poster because of how it makes you want to read the extra information that is typically in small print tucked away or interrupting the poster art. Is it a bit tacky that it\'s a word cloud Eiffel Tower? Sure. But did it get you to learn a thing or two about the film? I hope so!',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'promo',
         imgs: [BASE + '1476281025917-CSVM8VHIHNWHG9G8TOLI/WTMWD+Ad+for+the+Progressive-01.png' + FMT],
-        title: 'Ad — The Progressive Magazine',
-        sub: 'Print advertisement',
+        title: 'The Progressive Magazine',
+        sub: 'Print Advertisement',
         client: 'The Progressive',
-        year: '',
-        desc: 'Print advertisement design for The Progressive magazine.',
+        year: '2014',
+        desc: 'Print advertisement design for The Progressive magazine for a book launch. I like the retro vibes that this magazine, its audience, and the book\'s target audience call for — it was sort of a natural retro. There wasn\'t much room for frills and flash since the book was a fairly serious book on a fairly serious topic during a fairly seriously relevant time.',
         process: '',
         tools: ['Adobe Illustrator', 'Adobe InDesign'],
       },
@@ -1717,10 +1785,10 @@
         cat: 'promo',
         imgs: [BASE + '1476281029445-UBQGJ6F6FFOMIZAXAWSG/edn.png' + FMT],
         title: 'Earth Day Network',
-        sub: 'Event promotion',
+        sub: 'Concert Promo Poster',
         client: 'Earth Day Network',
-        year: '',
-        desc: 'Promotional design for Earth Day Network events and campaigns.',
+        year: '2012',
+        desc: 'Promotional concert poster design for Earth Day Network\'s Earth Day event on the National Mall in DC. I had some design freedoms but had to incorporate their theme graphics at the bottom. I was into layering and that 3D-vibe with blurs that make you think you need 3D glasses, so I laid that on thick. I was excited to make a concert poster that had Cheap Trick headlining — right after I\'d first heard their music.',
         process: '',
         tools: ['Adobe Illustrator', 'Adobe Photoshop'],
       },
@@ -1729,130 +1797,59 @@
       {
         cat: 'logos', featured: true,
         imgs: [BASE + '1532388410452-AE6N14KWJBJQ36FG4EZV/Texas+Logo+Full-01.png' + FMT],
-        title: 'Texas Organization Identity',
-        sub: 'Logo design',
-        client: '', year: '', desc: '', process: '',
+        title: 'Texas Logo',
+        sub: 'Logo Design / Brand System',
+        client: 'Association of Arts Administration Educators',
+        year: '2016',
+        desc: 'Everybody\'s favorite font. I did a treatment on this for an arts industry conference. I forget if the text treatment came first or the Texas texture came first. Either way, I like the look of the vector layering here. It would be cool if I\'d followed some county lines, but if I didn\'t, there\'s a way to make this even more meaningful. Let\'s just say I did.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'logos',
         imgs: [BASE + '1532391489418-HHIPALIRW5LV9VJMJ05Y/IPS+Tech+Expo+Logo+Portfolio-02.png' + FMT],
         title: 'IPS Tech Expo',
-        sub: 'Event logo design',
-        client: 'Institute for Policy Studies',
-        year: '',
-        desc: 'Logo and identity design for the IPS Tech Expo event.',
+        sub: 'Logo Design / Brand System',
+        client: 'Confidential',
+        year: '2017',
+        desc: 'Logo that was part of a whole brand system for a mock conference.',
         process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'logos',
         imgs: [BASE + '1532388615321-F2GLIZSI7APQOQUA4IBA/AAAE+2017+Program+Logo+Portfolio-10.png' + FMT],
-        title: 'AAAE 2017 Program',
-        sub: 'Program identity',
+        title: 'AAAE Conference 2017',
+        sub: 'Logo Design / Brand System',
         client: 'Association of Arts Administration Educators',
         year: '2017',
-        desc: 'Program logo and identity for the AAAE 2017 conference.',
+        desc: 'Arts industry conference branding system. What I loved about these one-time-use brand systems is how creative you can be with it. I loved weaving this design through every aspect of the conference\'s materials. This took heavy inspiration from Airbnb\'s logo process but with a hand-drawn look throughout.',
         process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'logos',
         imgs: [BASE + '1532388488626-0QALD7ZPYHBFLZOQB09D/Final+Logo+Portfolio-01.png' + FMT],
-        title: 'Logo — Selected Work',
-        sub: 'Logo design',
-        client: '', year: '', desc: '', process: '',
+        title: 'AAAE Conference 2016',
+        sub: 'Logo Design / Brand System',
+        client: 'Association of Arts Administration Educators',
+        year: '2016',
+        desc: 'Arts industry conference branding system. Another one! I did quite a few for this nonprofit and enjoyed doing it every year. I leaned into the isometric text vibes this year, especially given that it was in Philly.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
       {
         cat: 'logos',
         imgs: [BASE + '1476219959644-409ZQ47OXPU4EEAM2FAT/Logos-02.png' + FMT],
-        title: 'Logo Design — 02',
-        sub: 'Identity design',
-        client: '', year: '', desc: '', process: '',
-        tools: ['Adobe Illustrator'],
-      },
-      {
-        cat: 'logos',
-        imgs: [BASE + '1476219960765-FLM5O3PU0BH19TWBH0SH/Logos-04.png' + FMT],
-        title: 'Logo Design — 04',
-        sub: 'Identity design',
-        client: '', year: '', desc: '', process: '',
-        tools: ['Adobe Illustrator'],
-      },
-      {
-        cat: 'logos',
-        imgs: [BASE + '1476219961172-NRMB7K7JW4K9G69P84WI/Logos-03.png' + FMT],
-        title: 'Logo Design — 03',
-        sub: 'Identity design',
-        client: '', year: '', desc: '', process: '',
+        title: 'Polar Penguin',
+        sub: 'Logo Design',
+        client: 'Polar Penguin LLC',
+        year: '2014',
+        desc: 'A logo design for a mobile gaming startup. I love penguins so I had a great time researching and sketching them. I\'ll include a couple of my favorite sketches here, too.',
+        process: '',
         tools: ['Adobe Illustrator'],
       },
 
-      // ── Slideshows ──
-      {
-        cat: 'slideshows', featured: true,
-        imgs: [
-          BASE + '1476331860777-9TKY1066WIOOS78LQSC7/TDC+Template+Design-01.png' + FMT,
-          BASE + '1476331870827-VLWP7MC6ANHOMRRBUVXG/TDC+Template+Design-03.png' + FMT,
-          BASE + '1476331861111-FOXQGCCFY3ZZJJT3RXJ4/TDC+Template+Design-04.png' + FMT,
-        ],
-        title: 'TDC Presentation Template',
-        sub: 'Presentation design · Democracy Collaborative',
-        client: 'The Democracy Collaborative',
-        year: '',
-        desc: 'A versatile general-purpose presentation template designed to accommodate the wide range of research styles and presentation formats used by TDC\'s researchers and staff.',
-        process: 'The challenge was building one template that could serve many voices — from data-heavy policy presentations to narrative storytelling. A modular slide system was designed so researchers could pick the layout that fit their content.',
-        tools: ['Adobe Illustrator', 'PowerPoint', 'Keynote'],
-      },
-      {
-        cat: 'slideshows',
-        imgs: [
-          BASE + '1476331871208-JOAY4N9N6HM4U6RBQ9UX/AA+Presentation+Slides-01.png' + FMT,
-          BASE + '1476331871954-5R8NGLXOYI79PWEX5EO8/AA+Presentation+Slides-02.png' + FMT,
-        ],
-        title: 'AA Presentation',
-        sub: 'Visual-forward presentation',
-        client: '',
-        year: '',
-        desc: 'A visually-driven presentation designed for a presenter whose style prioritizes strong imagery and minimal text.',
-        process: '',
-        tools: ['Adobe Illustrator', 'Keynote'],
-      },
-      {
-        cat: 'slideshows',
-        imgs: [
-          BASE + '1476332865941-PAQCNLCK7PNS5JI20AMB/TLG+Presentation-01.png' + FMT,
-          BASE + '1476332866238-IE9X28O9SR8FBMPLANAA/TLG+Presentation-03.png' + FMT,
-          BASE + '1476332866257-OEGMKIUK3DOEXKF0PW2T/TLG+Presentation-10.png' + FMT,
-        ],
-        title: 'TLG Brand Presentation',
-        sub: 'Brand presentation · The Levinson Group',
-        client: 'The Levinson Group',
-        year: '',
-        desc: 'A branded presentation template designed around The Levinson Group\'s existing identity — text-heavy and structured for client-facing service presentations.',
-        process: '',
-        tools: ['Adobe Illustrator', 'PowerPoint'],
-      },
-      {
-        cat: 'slideshows',
-        imgs: [
-          BASE + '1564876723361-3DJVC1VJ7W88908NA1S2/NPQ+Portfolio+Files-01.png' + FMT,
-          BASE + '1564876723361-8O372ZI9RBSFKJXZKEIP/NPQ+Portfolio+Files-02.png' + FMT,
-          BASE + '1564876723590-KAW1S8G147D1BIT1CO0T/NPQ+Portfolio+Files-03.png' + FMT,
-          BASE + '1564876723690-5W973AS6NUZILYB1ELTA/NPQ+Portfolio+Files-04.png' + FMT,
-          BASE + '1564876723744-5L9ZAOZ6Z25XDHED0CYE/NPQ+Portfolio+Files-05.png' + FMT,
-          BASE + '1564876723977-PZSARFIFVY4ILOERHZHI/NPQ+Portfolio+Files-06.png' + FMT,
-          BASE + '1564876724035-L3VRZZMN6OBXAEJV6HFS/NPQ+Portfolio+Files-07.png' + FMT,
-        ],
-        title: 'Nonprofit Client — Presentation Template',
-        sub: 'Presentation design · Nonprofit, 2019',
-        client: 'Nonprofit Client (confidential)',
-        year: '2019',
-        desc: 'A modular presentation template designed for a nonprofit client. Features geometric color-blocked imagery, a branded palette, and flexible layouts for data and narrative content. Client identity replaced.',
-        process: '',
-        tools: ['Adobe Illustrator', 'PowerPoint', 'Keynote'],
-      },
     ];
 
     /* ── Category labels ──────────────────────────────── */
@@ -1861,7 +1858,6 @@
       'infographics': 'Infographics',
       'promo':        'Promos',
       'logos':        'Logos',
-      'slideshows':   'Slideshows',
     };
 
     /* ── Build & render grid ──────────────────────────── */
@@ -1872,6 +1868,7 @@
       const cat   = catLabel[p.cat] || p.cat;
       const delay = Math.min(index * 80, 500);
       const thumb = (p.imgs && p.imgs.length) ? p.imgs[0] : p.img;
+      const isGif = /\.gif/i.test(thumb);
       const card  = document.createElement('article');
       card.className = 'card';
       card.style.transitionDelay = delay + 'ms';
@@ -1888,9 +1885,46 @@
           <span class="card-arrow" aria-hidden="true">↗</span>
         </div>`;
 
+      if (isGif) {
+        const wrapEl = card.querySelector('.card-img-wrap');
+        const imgEl  = card.querySelector('.card-img-wrap img');
+        const canvas = document.createElement('canvas');
+        canvas.className = 'gif-freeze-canvas';
+        wrapEl.appendChild(canvas);
+
+        // Capture the first frame once the GIF loads, then show canvas as static cover
+        imgEl.addEventListener('load', () => {
+          const w = wrapEl.offsetWidth  || 400;
+          const h = wrapEl.offsetHeight || 300;
+          canvas.width  = w;
+          canvas.height = h;
+          // canvas covers the full wrap; img uses object-fit:cover so replicate that
+          const ar  = imgEl.naturalWidth / imgEl.naturalHeight;
+          const wAR = w / h;
+          let dw, dh, dx, dy;
+          if (ar > wAR) { dh = h; dw = h * ar; dx = (w - dw) / 2; dy = 0; }
+          else          { dw = w; dh = w / ar; dy = (h - dh) / 2; dx = 0; }
+          canvas.getContext('2d').drawImage(imgEl, dx, dy, dw, dh);
+          canvas.style.opacity = '1'; // show frozen frame
+          imgEl.style.opacity  = '0'; // hide live GIF
+        }, { once: true });
+
+        card.addEventListener('mouseenter', () => {
+          document.body.classList.add('cursor-hover');
+          canvas.style.opacity = '0'; // reveal live GIF
+          imgEl.style.opacity  = '1';
+        });
+        card.addEventListener('mouseleave', () => {
+          document.body.classList.remove('cursor-hover');
+          imgEl.style.opacity  = '0';
+          canvas.style.opacity = '1'; // restore frozen frame
+        });
+      } else {
+        card.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+        card.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+      }
+
       card.addEventListener('click', () => openModal(p, visibleList, index));
-      card.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-      card.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
       return card;
     }
 
@@ -1986,12 +2020,15 @@
     });
 
     /* ── Modal ────────────────────────────────────────── */
-    const backdrop   = document.getElementById('modal-backdrop');
-    const modal      = document.getElementById('modal');
-    const modalClose = document.getElementById('modal-close');
-    const modalPrev  = document.getElementById('modal-prev');
-    const modalNext  = document.getElementById('modal-next');
-    const dotsEl     = document.getElementById('modal-img-dots');
+    const backdrop    = document.getElementById('modal-backdrop');
+    const modal       = document.getElementById('modal');
+    const modalClose  = document.getElementById('modal-close');
+    const modalPrev   = document.getElementById('modal-prev');
+    const modalNext   = document.getElementById('modal-next');
+    const dotsEl      = document.getElementById('modal-img-dots');
+    const imgNavPrev  = document.getElementById('img-nav-prev');
+    const imgNavNext  = document.getElementById('img-nav-next');
+    const imgPane     = document.getElementById('modal-img-pane');
 
     let activeList     = [];   // projects currently visible in grid
     let activeIndex    = 0;    // index within activeList
@@ -2023,6 +2060,10 @@
       dotsEl.querySelectorAll('.modal-img-dot').forEach((d, i) => {
         d.classList.toggle('active', i === imgIdx);
       });
+
+      // Show/hide in-image arrows based on position (only when multiple images)
+      imgNavPrev.classList.toggle('visible', imgs.length > 1 && imgIdx > 0);
+      imgNavNext.classList.toggle('visible', imgs.length > 1 && imgIdx < imgs.length - 1);
     }
 
     function buildDots(project) {
@@ -2098,6 +2139,17 @@
       if (e.target === modal) closeModal();
     });
 
+    // In-image arrow nav (desktop)
+    imgNavPrev.addEventListener('click', () => {
+      const p = activeList[activeIndex];
+      if (activeImgIndex > 0) setModalImage(p, activeImgIndex - 1);
+    });
+    imgNavNext.addEventListener('click', () => {
+      const p = activeList[activeIndex];
+      const imgs = projectImgs(p);
+      if (activeImgIndex < imgs.length - 1) setModalImage(p, activeImgIndex + 1);
+    });
+
     // Project-level navigation
     modalPrev.addEventListener('click', () => {
       if (activeIndex > 0) openModal(activeList[activeIndex - 1], activeList, activeIndex - 1);
@@ -2121,20 +2173,211 @@
       }
     });
 
+    // Touch swipe on image pane (mobile)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    imgPane.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    imgPane.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      // Only act if horizontal swipe dominates and exceeds threshold
+      if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx)) return;
+      const p = activeList[activeIndex];
+      const imgs = projectImgs(p);
+      if (dx < 0 && activeImgIndex < imgs.length - 1) {
+        // swipe left → next image
+        setModalImage(p, activeImgIndex + 1);
+      } else if (dx > 0 && activeImgIndex > 0) {
+        // swipe right → prev image
+        setModalImage(p, activeImgIndex - 1);
+      }
+    }, { passive: true });
+
     /* ── Nav scroll state ─────────────────────────────── */
     window.addEventListener('scroll', () => {
       document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 50);
     }, { passive: true });
 
-    /* ── Hero name parallax ───────────────────────────── */
-    const heroName = document.getElementById('hero-name');
-    window.addEventListener('scroll', () => {
-      const s = window.scrollY;
-      if (s < window.innerHeight) {
-        heroName.style.transform = `translateY(${s * 0.16}px)`;
-        heroName.style.opacity   = 1 - s / (window.innerHeight * 0.72);
+    /* ── Hero slot machine ─────────────────────────────── */
+    (function heroSlot() {
+      const items = [
+        'a billboard protesting net neutrality policies',
+        'a bus wrap protesting net neutrality policies',
+        't-shirts for Nike internal teams',
+        'logos — so many logos',
+        'brochures for special events',
+        'web banner ads for event promotions',
+        'posters for a concert on the National Mall',
+        'dashboards for data reporting on the newest AI features',
+        'data tools for forecasting ad sales',
+        'dashboards for tracking perceptions of brands',
+        'tools to find target audiences',
+        'infographics for explaining political economic systems',
+        'reports on alternative economies',
+        'conference booklets for the arts community',
+        'brand systems for internal teams',
+        'brand systems for non-profit organizations',
+        'social media content for skincare companies',
+        'book covers and movie posters',
+        'graphics for published articles',
+        'standalone infographics depicting income inequality',
+        'websites for small businesses',
+        'brand systems for small businesses',
+        'letterheads, envelopes, and business cards',
+        'presentation decks on keynote and powerpoint',
+        'door wraps for special events',
+        'stickers for marketing events',
+        'print ads for local businesses',
+        'marketing materials for non-profits',
+        'the Peacock logo (an unofficial rumor)',
+        'logos for internal tools at NBC',
+        'intramural championship t-shirts for UC Irvine',
+        'door wraps on Nike campus office doors',
+        'coveted Nike stickers',
+        'small business websites',
+        'short film graphics',
+        'letterhead, envelopes, and business cards',
+        'small business logos',
+      ];
+
+      const viewport = document.getElementById('hero-slot-viewport');
+      if (!viewport) return;
+
+      let lastIdx = 0;
+      let busy    = false;
+
+      // Seed a random starting item
+      lastIdx = Math.floor(Math.random() * items.length);
+
+      function makeItem(text) {
+        const el = document.createElement('span');
+        el.className = 'hero-slot-item';
+        // Prevent orphaned single word on 2nd line: glue last two words together
+        const noOrphan = text.replace(/ (\S+\s*)$/, ' $1');
+        el.textContent = noOrphan;
+        return el;
       }
-    }, { passive: true });
+
+      function pickNext() {
+        // Pick a random index, never the same as lastIdx
+        let r;
+        do { r = Math.floor(Math.random() * items.length); } while (r === lastIdx);
+        return r;
+      }
+
+      // Seed first item
+      const first = makeItem(items[lastIdx]);
+      viewport.appendChild(first);
+
+      function advance() {
+        if (busy) return;
+        busy = true;
+
+        const nextIdx = pickNext();
+        const current = viewport.querySelector('.hero-slot-item');
+        const h = viewport.offsetHeight;
+
+        // Build incoming item below the viewport
+        const next = makeItem(items[nextIdx]);
+        next.style.transform = `translateY(${h}px)`;
+        next.style.transition = 'none';
+        viewport.appendChild(next);
+
+        // Force reflow so initial position registers before transition
+        next.offsetHeight;
+
+        const ease = 'transform 0.58s cubic-bezier(0.77, 0, 0.175, 1)';
+        current.style.transition = ease;
+        next.style.transition    = ease;
+        current.style.transform  = `translateY(-${h}px)`;
+        next.style.transform     = 'translateY(0)';
+
+        setTimeout(() => {
+          current.remove();
+          lastIdx = nextIdx;
+          busy    = false;
+        }, 650);
+      }
+
+      // First advance after 2.5 s, then every 3.5 s
+      setTimeout(() => {
+        advance();
+        setInterval(advance, 3500);
+      }, 2500);
+    })();
+
+    /* ── Hero intro subtle fade on scroll ─────────────── */
+    const heroIntro = document.querySelector('.hero-intro');
+    if (heroIntro) {
+      window.addEventListener('scroll', () => {
+        const s = window.scrollY;
+        if (s < 400) heroIntro.style.opacity = Math.max(0, 1 - s / 300);
+      }, { passive: true });
+    }
+
+    /* ── Favorites segment rectangles ─────────────────── */
+    (function renderFavorites() {
+      const items = [
+        { label: 'Illustrator',     score: 5   },
+        { label: 'Photoshop',       score: 4.5 },
+        { label: 'InDesign',        score: 4.5 },
+        { label: 'Figma',           score: 4.5 },
+        { label: 'd3',              score: 4   },
+        { label: 'React',           score: 4   },
+        { label: 'VS Code',         score: 4   },
+        { label: 'Cursor',          score: 4.5 },
+        { label: 'Copilot',         score: 4   },
+        { label: 'GPT',             score: 3   },
+        { label: 'Clawbot',         score: 3.2 },
+        { label: 'Claude',          score: 3.5 },
+        { label: 'Typography',      score: 5   },
+        { label: 'Sustainability',  score: 5   },
+        { label: 'Dogs',            score: 5   },
+        { label: 'Basketball',      score: 4.5 },
+      ];
+
+      const container = document.getElementById('favorites-dots');
+      if (!container) return;
+
+      const filledColor = '#B8892E'; // solid gold
+      const emptyColor  = '#E0D8C6'; // var(--cream-dark)
+
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'resume-dot-row';
+
+        const lbl = document.createElement('span');
+        lbl.className = 'resume-bar-label';
+        lbl.textContent = item.label;
+        row.appendChild(lbl);
+
+        const track = document.createElement('div');
+        track.className = 'resume-dot-track';
+
+        for (let i = 0; i < 5; i++) {
+          const seg = document.createElement('span');
+          seg.className = 'resume-dot';
+          if (i < Math.floor(item.score)) {
+            // Fully filled
+            seg.style.background = filledColor;
+          } else if (i < item.score) {
+            // Partial — split at fractional amount
+            const pct = Math.round((item.score - Math.floor(item.score)) * 100);
+            seg.style.background =
+              `linear-gradient(to right, ${filledColor} ${pct}%, ${emptyColor} ${pct}%)`;
+          } else {
+            seg.style.background = emptyColor;
+          }
+          track.appendChild(seg);
+        }
+
+        row.appendChild(track);
+        container.appendChild(row);
+      });
+    })();
 
     /* ── AI bar animation ─────────────────────────────── */
     (function animateAI() {

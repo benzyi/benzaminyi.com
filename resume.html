@@ -68,10 +68,10 @@
       box-shadow: 0 1px 0 var(--cream-dark);
     }
     .nav-logo {
-      font-family: var(--serif); font-weight: 700; font-size: 15px;
-      text-decoration: none; color: var(--ink); letter-spacing: -0.01em;
+      display: flex; align-items: center;
+      text-decoration: none; color: var(--ink); flex-shrink: 0;
     }
-    .nav-logo sup { color: var(--gold); font-size: 0.62em; }
+    .nav-logo svg { display: block; }
     .nav-links { display: flex; gap: 32px; list-style: none; }
     .nav-links a {
       font-size: 11px; font-weight: 400; letter-spacing: 0.14em;
@@ -188,9 +188,7 @@
     .resume-pub-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .resume-pub-list li {
       font-size: 12.5px; color: var(--ink-soft); line-height: 1.6;
-      padding-left: 14px; position: relative;
     }
-    .resume-pub-list li::before { content: '—'; position: absolute; left: 0; color: var(--ink-muted); }
 
     /* ─── Contact strip ────────────────────────────── */
     .contact-strip {
@@ -223,11 +221,24 @@
   <div id="cursor-ring"></div>
 
   <nav id="main-nav">
-    <a href="index.html" class="nav-logo">Designs by<sup>2</sup></a>
+    <a href="index.html" class="nav-logo" aria-label="Benzamin Yi — home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 203.74 66.38" height="24" role="img" aria-hidden="true">
+        <style>.rlb1{fill:var(--ink)}.rlb2{fill:var(--gold)}</style>
+        <rect class="rlb2" x="61.87" y="6.62" width="51.08" height="51.08" rx="11.68" ry="11.68"/>
+        <path class="rlb1" d="M3.09,32.68h19.91c9.03,0,15.41,5.94,15.41,14.4,0,7.96-6.37,14.4-15.41,14.4H3.09v-28.8ZM10.29,39.16v15.84h12.71c6.23,0,7.96-4.1,7.96-7.92s-1.91-7.92-7.96-7.92h-12.71Z"/>
+        <path class="rlb1" d="M42.54,61.48v-28.8h29.84v6.48h-22.64v4.86h20.12v6.12h-20.12v4.86h22.64v6.48h-29.84Z"/>
+        <path class="rlb1" d="M75.59,41.46c0-6.08,6.66-9.36,15.8-9.36,6.16,0,12.31.94,14.58,2.23l-1.37,6.12c-2.41-1.44-8.53-2.2-13.46-2.2-6.08,0-8.42.86-8.42,2.38,0,5.29,24.12.22,24.12,11.73,0,5.15-5.11,9.68-16.02,9.68-5.08,0-11.66-.43-14.65-1.84l.29-6.59c2.99,1.44,8.42,2.27,14.58,2.27s8.64-1.12,8.64-2.45c0-4.93-24.08-.07-24.08-11.99Z"/>
+        <path class="rlb1" d="M111.12,32.68h7.2v28.8h-7.2v-28.8Z"/>
+        <path class="rlb1" d="M140.53,44.02h15.8v16.31c-2.3.86-8.39,1.73-12.85,1.73-13.75,0-20.45-6.19-20.45-15.01s7.02-14.9,21.09-14.9c5.22,0,9.83.58,12.67,1.26l-.68,6.08c-3.24-.61-6.62-1.12-12.31-1.12-9.61,0-13.35,3.35-13.35,8.53,0,5.47,4.1,8.85,12.92,8.85,1.66,0,3.82-.11,5.9-.29v-5.33h-8.75v-6.12Z"/>
+        <path class="rlb1" d="M170.99,41.28h-1.8v20.19h-7.2v-28.8h10.12l19.04,18.18h1.8v-18.18h7.2v28.8h-8.71l-20.45-20.19Z"/>
+        <path class="rlb1" d="M51.31,2.3h24.37c8.03,0,11.16,3.17,11.16,7.88,0,2.77-1.01,4.9-3.46,6.19,2.45,1.29,3.46,3.46,3.46,6.3,0,4.82-3.1,8.42-11.12,8.42h-24.41V2.3ZM58.51,8.42v5.69h17.42c2.63,0,3.42-1.51,3.42-2.7,0-1.12-.79-2.99-3.42-2.99h-17.42ZM58.51,19.29v5.69h17.42c2.66,0,3.42-1.73,3.42-2.95,0-1.15-.72-2.74-3.42-2.74h-17.42Z"/>
+        <path class="rlb1" d="M101.57,21.96l-15.08-19.65h8.39l9.43,12.6h1.44l9.03-12.6h8.53l-14.54,19.33v9.47h-7.2v-9.14Z"/>
+      </svg>
+    </a>
     <ul class="nav-links">
       <li><a href="index.html#portfolio">Portfolio</a></li>
       <li><a href="index.html#bio">Bio</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="contact.html">Contact</a></li>
       <li><a href="resume.html" class="nav-resume-btn active">Résumé</a></li>
     </ul>
   </nav>
@@ -235,7 +246,7 @@
   <!-- ── Page Header ── -->
   <div class="resume-page-header">
     <span class="section-eyebrow">Résumé</span>
-    <h1 class="resume-page-title">Benzamin Yi.</h1>
+    <h1 class="resume-page-title">Benzamin Yi</h1>
   </div>
 
   <div class="resume-page-body">
@@ -291,7 +302,8 @@
             </ul>
           </div>
           <div>
-            <h3 class="resume-list-block-heading">Organizations &amp; clients</h3>
+            <h3 class="resume-list-block-heading">Employers &amp; clients</h3>
+            <p style="font-size:9px;color:var(--ink-muted);letter-spacing:0.06em;font-style:italic;margin-top:-10px;margin-bottom:14px;">bold = employer</p>
             <ul class="resume-plain-list">
               <li><strong style="color:#111111">Nike</strong></li>
               <li><strong style="color:#e42a1d">Parsons School of Design</strong></li>
@@ -299,6 +311,7 @@
               <li><strong style="color:#400093">NBCUniversal</strong></li>
               <li>Unilever</li>
               <li>Boeing</li>
+              <li>Amazon</li>
               <li>Wells Fargo</li>
               <li>University of Houston</li>
               <li>University of Maryland, College Park</li>
@@ -331,28 +344,28 @@
         <div>
           <span class="resume-pub-sub-heading">Author</span>
           <ul class="resume-pub-list">
-            <li><em>et al.</em>, Energy Efficiency in California (The Keystone Center, 2009)</li>
-            <li>"A Fair Distribution of Economic Costs in Global Warming," <em>California Undergraduate Philosophy Review</em> (2010)</li>
-            <li>"Worker-Owners and Unions," Infographic, <em>Cooperative Business Journal</em>, vol. 26, no. 3 (May/June 2012)</li>
-            <li>with Joe Guinan and Sarah McKinley, <em>Raising Student Voices</em> (The Democracy Collaborative and Responsible Endowments Coalition, 2013)</li>
+            <li>Benzamin Yi, <em>et al.</em>, <em>Energy Efficiency in California</em> (The Keystone Center, 2009);</li>
+            <li>Benzamin Yi, "A Fair Distribution of Economic Costs in Global Warming," <em>California Undergraduate Philosophy Review</em> (2010);</li>
+            <li>Benzamin Yi, "Worker-Owners and Unions," Infographic, <em>Cooperative Business Journal</em>, vol. 26, no. 3 (May/June 2012);</li>
+            <li>Benzamin Yi, <em>et al.</em>, <em>Raising Student Voices</em> (The Democracy Collaborative and Responsible Endowments Coalition, 2013).</li>
           </ul>
         </div>
         <div>
           <span class="resume-pub-sub-heading">Graphics Supplementing Articles</span>
           <ul class="resume-pub-list">
-            <li>Alperovitz &amp; Bhatt, "Wall Street Journal More Interested in Caviar and Foie Gras Than Worker Ownership," <em>Huffington Post</em> (2012)</li>
-            <li>Trista Kendall, "Infographic: The Why &amp; How of Community Land Trusts," <em>Shareable</em> (2014)</li>
-            <li>Maz Ali, "Anyone Who Hates Working For 'The Man' Will Love What These Charts Have To Say," <em>Upworthy</em> (2014)</li>
-            <li>Alperovitz &amp; Speth, "It's Time to Get Serious About Systemic Solutions," <em>Huffington Post</em> (2015)</li>
+            <li>Alperovitz &amp; Bhatt, "Wall Street Journal More Interested in Caviar and Foie Gras Than Worker Ownership," <em>Huffington Post</em> (2012);</li>
+            <li>Trista Kendall, "Infographic: The Why &amp; How of Community Land Trusts," <em>Shareable</em> (2014);</li>
+            <li>Maz Ali, "Anyone Who Hates Working For 'The Man' Will Love What These Charts Have To Say," <em>Upworthy</em> (2014);</li>
+            <li>Alperovitz &amp; Speth, "It's Time to Get Serious About Systemic Solutions," <em>Huffington Post</em> (2015).</li>
           </ul>
         </div>
         <div>
-          <span class="resume-pub-sub-heading">Acknowledged in Published Books for Research</span>
+          <span class="resume-pub-sub-heading">Acknowledged for Research</span>
           <ul class="resume-pub-list">
-            <li>Gar Alperovitz, <em>America Beyond Capitalism</em>, 2nd ed. (2011)</li>
-            <li>Dubb &amp; Hodges, <em>The Road Half Traveled</em> (MSU Press, 2012)</li>
-            <li>Gar Alperovitz, <em>What Then Must We Do?</em> (Chelsea Green Publishing, 2013)</li>
-            <li>Glenn Frankel, <em>High Noon: The Hollywood Blacklist and the Making of an American Classic</em> (Bloomsbury, 2017)</li>
+            <li>Gar Alperovitz, <em>America Beyond Capitalism</em>, 2nd ed. (2011);</li>
+            <li>Dubb &amp; Hodges, <em>The Road Half Traveled</em> (MSU Press, 2012);</li>
+            <li>Gar Alperovitz, <em>What Then Must We Do?</em> (Chelsea Green Publishing, 2013);</li>
+            <li>Glenn Frankel, <em>High Noon: The Hollywood Blacklist and the Making of an American Classic</em> (Bloomsbury, 2017).</li>
           </ul>
         </div>
       </div>
@@ -367,7 +380,7 @@
   <!-- ── Contact strip ── -->
   <div class="hr"></div>
   <div class="contact-strip">
-    <a href="index.html#contact" class="contact-strip-btn">Get in touch</a>
+    <a href="contact.html" class="contact-strip-btn">Get in touch</a>
   </div>
 
   <script>
